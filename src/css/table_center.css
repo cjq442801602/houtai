@@ -1,0 +1,50 @@
+.table_center{
+	padding: 	30px;
+	width:      100%;
+	height:     520px;
+	border-top: 28px solid rgba(190,190,190,0.5) ;
+	border-left:28px solid rgba(190,190,190,0.5) ;
+
+}
+.center_table{
+	width: 850px;
+	height: 30px;
+	border-bottom: 2px solid rgba(190,190,190,0.5) ;
+
+}
+.center_table span{
+	font-size: 20px;
+	font-weight:bolder;
+	float:left;
+}
+.center_table ul{
+	float: right;
+}
+.center_table ul li{
+	margin-right: 7px;
+	font-size: 16px;
+	float:left;
+	/* border-bottom: 4px solid yellow; */
+	padding-bottom: 4px;
+	padding-top: 3px;
+}
+
+.center_table li:hover{border-bottom: 4px solid #58bc58;}
+
+.layui-body .transaction{
+	width: 270px;
+	height: 140px;
+/* 	background: #58bc58; */
+	text-align: center;
+	padding-top: 60px;
+	float: left;
+	margin-right: 10px;
+}
+.layui-body .transaction span{
+	font-size: 41px;
+	font-weight:bolder;
+	color:#58bc58;
+}
+.layui-body .transaction p{
+	font-size: 22px;
+}

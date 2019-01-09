@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品列表</title>
+    <link rel="stylesheet" href="../assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/table_center.css">
+    <script src="../js/common.js"></script>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">后台管理系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="center.html">首页</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">商品管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">商品列表</a></li>
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="../assets/img/mao.png" class="layui-nav-img">
+                        <span id="adminName">God</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;" id="logout">退出登录</a></li>
+            </ul>
+        </div>
+
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="center.html">首页</a>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">商品管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">商品列表</a></dd>
+                            <dd><a href="category.html">商品分类</a></dd>
+                            <dd><a href="goods_add.html">商品添加</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">用户管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="user.html">用户列表</a></dd>
+                            <dd><a href="user_add.html">用户添加</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">订单管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="orders.html">订单列表</a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div class="table_center">
+                <!-- 内容主体区域 -->
+
+                <!--搜索框 -->
+                <div class="demoTable">
+                  搜索：
+                  <div class="layui-inline">
+                    <input class="layui-input" name="searchText" id="searchText" autocomplete="off">
+                  </div>
+                  <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+
+                <table id="demo" lay-filter="test" ></table>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-bg-gray layui-btn-xs goodsState" lay-event="state">下架</a>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <a href="goods_add.html" class="layui-btn layui-btn-sm" target="_blank" >添加</a>
+            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+        </div>
+    </script>
+    <script src="../assets/layui/layui.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+            let quit =  document.querySelector('#logout');
+            logging();
+            quit.onclick = logout;
+        });
+    </script>
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#demo'
+                , id: 'mytable'
+                , width: 1040
+                /*, height: 467*/
+                , url: '/goodslist' //数据接口
+                , toolbar: '#toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                , defaultToolbar: []
+                , parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": res.data //解析数据列表
+                    };
+                }
+                , request: {
+                    pageName: 'page'
+                    , limitName: 'qty'
+                }
+                , page: true //开启分页
+                , qty: 10
+                , cols: [[ //表头
+                    { type: 'checkbox' }
+                    , { field: '_id', title: 'ID', width: 200, sort: true }
+                    , { field: 'name', title: '商品', width: 200 }
+                    , { field: 'price', title: '价格', width: 80, sort: true }
+                    , { field: 'sales', title: '销量', width: 80, sort: true }
+                    , { field: 'category', title: '分类', width: 80 }
+                    , { field: 'stock', title: '库存', width: 80, sort: true }
+                    , { field: 'description', title: '描述', width: 100 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 164 }
+                ]]
+                , done: function(res,curr,count){
+                    let stateArr = document.querySelectorAll('.goodsState');
+                    res.data.forEach((item,idx)=>{
+                        if(item.state == 1){
+                            stateArr[idx].classList.remove('layui-bg-gray');
+                            stateArr[idx].classList.add('layui-bg-orange');
+                            stateArr[idx].innerHTML = '上架';
+                        }else{
+                            stateArr[idx].classList.add('layui-bg-gray');
+                            stateArr[idx].classList.remove('layui-bg-orange');
+                            stateArr[idx].innerHTML = '下架';
+                        }
+                    })
+                }
+            });
+
+            //监听头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id)
+                    , data = checkStatus.data; //获取选中的数据
+                switch (obj.event) {
+                    case 'add':
+                        layer.msg('添加');//已用a标签链接跳转
+                        break;
+                    case 'delete':
+                        if (data.length === 0) {
+                            layer.msg('请选择一行');
+                        } else {
+                            layer.confirm('真的删除行么', function (index) {
+                                console.log(data) //获取选中行的数据
+                                console.log(obj.config.page.curr,obj.config.page.limit);//获取页码和数量
+                                layer.close(index);
+                                let arr = data.map(item => item._id);
+                                let str = '_id=' + JSON.stringify(arr);
+                                ajax('DELETE','/goodslist',str,()=>{
+                                    location.href='goodslist.html';
+                                });
+                            });
+                        }
+                        break;
+                };
+            });
+
+
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                console.log(obj);
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                        let arr = [];
+                        arr.push(data._id);
+                        let str = '_id=' + JSON.stringify(arr);
+                        console.log(data);
+                        ajax('DELETE','/goodslist',str);
+                    });
+                } else if (obj.event === 'edit') {
+                    //编辑商品信息，利用cookie传递id
+                    Cookie.set('goodsId',data._id);
+                    location.href = './goods_edit.html';
+                } else if (obj.event === 'state') {
+                    let _state;
+                    let thisA = obj.tr[0].querySelector('.goodsState');
+                    if(data.state == 1){
+                        _state = 0;
+                        thisA.classList.add('layui-bg-gray');
+                        thisA.classList.remove('layui-bg-orange');
+                        thisA.innerHTML = '下架';
+                    }else{
+                        _state = 1;
+                        thisA.classList.remove('layui-bg-gray');
+                        thisA.classList.add('layui-bg-orange');
+                        thisA.innerHTML = '上架';
+                    }
+                    data.state = _state;
+                    data = objToStr(data);
+                    ajax('POST','/goodslist',data);
+                }
+            });
+
+            //模糊查询
+            let $ = layui.$, likeSearch = {
+                reload:function(){
+                    let searchText = $('#searchText').val().trim();
+                    let searchUrl = '/goodslist/' + searchText;
+                    table.reload('mytable',{
+                        url:searchUrl
+                    });
+                }
+            };
+            $('.demoTable .layui-btn').on('click',function(){
+                let type = $(this).data('type');
+                likeSearch[type] ? likeSearch[type].call(this) : '';
+            })
+
+            $('#searchText').on('keyup',function(e){
+                e = e || window.evnet;
+                if(e.keyCode == 13){
+                    let type = $(this).parent().next().data('type');
+                    likeSearch[type] ? likeSearch[type].call(this) : '';
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>

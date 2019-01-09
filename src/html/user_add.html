@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>用户添加</title>
+    <link rel="stylesheet" href="../assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/table_center.css">
+    <script src="../js/common.js"></script>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">后台管理系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="center.html">首页</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">用户管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">用户添加</a></li>
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="../assets/img/mao.png" class="layui-nav-img">
+                        <span id="adminName">God</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;" id="logout">退出登录</a></li>
+            </ul>
+        </div>
+
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="center.html">首页</a>
+                    </li>
+
+                    <li class="layui-nav-item ">
+                        <a class="" href="javascript:;">商品管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="goodslist.html">商品列表</a></dd>
+                            <dd><a href="category.html">商品分类</a></dd>
+                            <dd><a href="goods_add.html">商品添加</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;">用户管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="user.html">用户列表</a></dd>
+                            <dd><a href="user_add.html">用户添加</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">订单管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="orders.html">订单列表</a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div class="table_center">
+                <!--========================== 用户添加 添加内容区域 ==============================---->
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">昵称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="nickname" required lay-verify="required|nickname" placeholder="您的昵称" autocomplete="off"
+                                class="layui-input" style="width: 600px;">
+                        </div>
+                    </div>
+                    <!--=======手机号====== -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机号</label>
+                        <div class="layui-input-block">
+                            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input" style="width: 600px;">
+                        </div>
+                    </div>
+                    <!--  =====密码框=======-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码框</label>
+                        <div class="layui-input-inline" style="width: 400px;">
+                            <input type="password" name="password" required lay-verify="required|pass" placeholder="请输入密码"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+                    </div>
+                    <!--性别   生日-->
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">生日</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="birthday" id="date" lay-verify="date" placeholder="yyyy/MM/dd"
+                                    autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">性别选择</label>
+                            <div class="layui-input-inline">
+                                <select name="gender" lay-verify="">
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--邮箱===========-->
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" required lay-verify="email" placeholder="请输入您的邮箱"
+                                autocomplete="off" class="layui-input" style="width: 600px;">
+                        </div>
+                    </div>
+                    <!--  输入框=================-->
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-block">
+                            <textarea name="remark" placeholder="对该用户的描述" class="layui-textarea" style="width: 600px; height: 180px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="../assets/layui/layui.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+            let quit =  document.querySelector('#logout');
+            logging();
+            quit.onclick = logout;
+        });
+    </script>
+    <script>
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#date'
+                , format: 'yyyy/MM/dd'
+            });
+
+            //自定义验证规则
+            form.verify({
+                nickname: function (value) {
+                    if (value.length < 2) {
+                        return '昵称至少得2个字符啊';
+                    }
+                }
+                , pass: [/(.+){6,12}$/, '密码必须6到12位']
+            });
+
+            //监听提交
+            form.on('submit(formDemo)', function (data) {
+                layer.msg(JSON.stringify(data.field));
+                let _data = objToStr(data.field);
+                console.log(_data);
+                ajax('PUT','/user',_data);
+                location.href = './user.html';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

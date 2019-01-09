@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="../assets/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/table_center.css">
+    <script src="../js/common.js"></script>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">后台管理系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="center.html">首页</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">订单管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:;"></a></li>
+                <li class="layui-nav-item"><a href="javascript:;">订单列表</a></li>
+
+            </ul>
+
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="../assets/img/mao.png" class="layui-nav-img">
+                        <span id="adminName">God</span>
+                    </a>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:;" id="logout">退出登录</a></li>
+            </ul>
+        </div>
+
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="center.html">首页</a>
+                    </li>
+
+                    <li class="layui-nav-item ">
+                        <a class="" href="javascript:;">商品管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="goodslist.html">商品列表</a></dd>
+                            <dd><a href="category.html">商品分类</a></dd>
+                            <dd><a href="goods_add.html">商品添加</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">用户管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="user.html">用户列表</a></dd>
+                            <dd><a href="user_add.html">用户添加</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;">订单管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">订单列表</a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div class="table_center">
+                <!-- 这是订单列表内容主体区域 ========================-->
+                <button class="layui-btn layui-btn-primary" id="delMany">
+                    <i class="layui-icon">&#xe640;</i> 删除
+                </button>
+                <table id="demo" lay-filter="test"></table>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script src="../assets/layui/layui.js"></script>
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            //展示已知数据
+            table.render({
+                elem: '#demo'
+                , width: 1119
+                , url: '/orders' //数据接口
+                , parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": res.data //解析数据列表
+                    };
+                }
+                , request: {
+                    pageName: 'page'
+                    , limitName: 'qty'
+                }
+                , page: true //开启分页
+                , qty: 10
+                , cols: [[ //标题栏
+                    { type: 'checkbox' }
+                    , { field: '_id', title: 'ID', width: 200, sort: true }
+                    , { field: 'name', title: '商品名称', width: 200 }
+                    , { field: 'price', title: '商品价格', width: 90 }
+                    , { field: 'num', title: '数量', width: 90 }
+                    , { field: 'freight', title: '运费', width: 90 }
+                    , {field:'totalPrice', title: '商品总额', width: 100,templet: function(d){
+                        return d.price * d.num;
+                        }
+                    }
+                    , {field:'total', title: '订单总额', width: 100,templet: function(d){
+                        return d.price * d.num - d.freight*1;
+                        }
+                    }
+                    , { field: 'time', title: '下单时间', width: 110 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 80 }
+                ]]
+                , even: true
+            });
+
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                        let arr = [];
+                        arr.push(data._id);
+                        let str = '_id=' + JSON.stringify(arr);
+                        console.log(data);
+                        ajax('DELETE','/orders',str);
+                    });
+                }
+            });
+
+            //使用jq
+            var $ = layui.$;
+            //点击删除选中的数据
+            $('#delMany').on('click',()=>{
+                let checkStatus = table.checkStatus('demo'); //idTest 即为基础参数 id 对应的值
+                let data = checkStatus.data;
+
+                if (data.length === 0) {
+                    layer.msg('请选择一行');
+                } else {
+                    layer.confirm('真的删除行么', function (index) {
+                        layer.close(index);
+                        let arr = data.map(item => item._id);
+                        let str = '_id=' + JSON.stringify(arr);
+                        ajax('DELETE','/orders',str,()=>{
+                            location.href='orders.html';
+                        });
+                    });
+                }
+            })
+        });
+    </script>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function () {
+            var element = layui.element;
+            let quit =  document.querySelector('#logout');
+            logging();
+            quit.onclick = logout;
+        });
+    </script>
+</body>
+
+</html>
